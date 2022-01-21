@@ -9,14 +9,23 @@ def main():
         scan_list = fc.scan_step(37)
         if not scan_list:
             continue
-        scan_focus = scan_list[3:7]
+        
+        left_signal = scan_list[:3]
+        forward_signal = scan_list[3:7]
+        right_signal = scan_list[7:]
 
-        if scan_focus != [2, 2, 2, 2]:
+        if forward_signal != [2, 2, 2, 2]:   # there is obstacle ahead
             fc.backward(speed)
             sleep(0.3)
-            fc.turn_left(speed)
-            sleep(0.2)
-        else:
+            if left_signal == [2, 2, 2]:     # left direction clear
+                fc.turn_left(speed)
+                sleep(0.2)
+            elif right_signal == [2, 2, 2]:  # right direction clear
+                fc.turn_right(speed)
+                sleep(0.2)
+            else:                            # obstacles in all three directions
+                break
+        else:                                # no obstacle ahead
             fc.forward(speed)
             sleep(0.3)
 
